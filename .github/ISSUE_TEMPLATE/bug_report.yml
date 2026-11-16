@@ -1,0 +1,119 @@
+name: 🐞 Bug report / crash
+description: Something is broken, looks wrong, or crashes the game.
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report this! Please check that you're on the **latest version** and that nobody has [already reported it](../issues).
+        Just have a question? Ask on [Discord](DISCORD_INVITE_LINK) instead.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Describe the problem. What did you expect to happen instead?
+      placeholder: "Footprints don't show up on sand when I use Sodium..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: How can I reproduce it?
+      description: Step-by-step, if you know how to make it happen again.
+      placeholder: |
+        1. Install the mod with ...
+        2. Walk on ...
+        3. See ...
+    validations:
+      required: false
+
+  - type: dropdown
+    id: loader
+    attributes:
+      label: Mod loader
+      options:
+        - Fabric
+        - Forge
+        - NeoForge
+        - Quilt
+    validations:
+      required: true
+
+  - type: dropdown
+    id: mc-version
+    attributes:
+      label: Minecraft version
+      options:
+        - "26.3"
+        - "1.21.1"
+        - "1.20.1"
+        - "1.12.2"
+        - Other (write it below)
+    validations:
+      required: true
+
+  - type: input
+    id: mod-version
+    attributes:
+      label: Footsteps Trail version
+      description: Shown in the mod list, or in the file name of the jar.
+      placeholder: "1.4.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: footprint-type
+    attributes:
+      label: Footprint type
+      description: Run `/footsteps` in-game to see which one is active.
+      options:
+        - Terrain (default)
+        - Surface
+        - Classic
+        - Not sure / doesn't matter
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: render-mods
+    attributes:
+      label: Rendering mods installed
+      description: These change how the game renders blocks, so they matter a lot for footprint bugs.
+      options:
+        - label: Sodium
+        - label: Embeddium / Rubidium
+        - label: Iris / Oculus (shaders)
+        - label: OptiFine
+        - label: None of these
+
+  - type: input
+    id: modpack
+    attributes:
+      label: Modpack (if any)
+      description: Name and link of the modpack, if you're playing one.
+      placeholder: "Medieval Europe Adventures - https://www.curseforge.com/minecraft/modpacks/..."
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Crash report or log
+      description: |
+        **Crash:** upload the file from `.minecraft/crash-reports/`.
+        **Anything else:** upload `.minecraft/logs/latest.log`.
+        Paste a [mclo.gs](https://mclo.gs) link, or drag the file into this box.
+      placeholder: "https://mclo.gs/..."
+    validations:
+      required: false
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: Screenshots or anything else
+      description: Screenshots or short clips help a lot with visual bugs. Drag them in here.
+    validations:
+      required: false

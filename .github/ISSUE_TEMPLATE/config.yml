@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Questions & help (Discord)
+    url: DISCORD_INVITE_LINK
+    about: Not sure if it's a bug, or need help with a setting? Ask here. It's the fastest way to get an answer.
+  - name: 📥 Download on Modrinth
+    url: https://modrinth.com/mod/footsteps-trail
+    about: Get the latest version.
+  - name: 📥 Download on CurseForge
+    url: https://www.curseforge.com/minecraft/mc-mods/footsteps-trail
+    about: Get the latest version.

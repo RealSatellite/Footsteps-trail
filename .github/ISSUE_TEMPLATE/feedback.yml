@@ -1,0 +1,56 @@
+name: 💡 Suggestion / feedback
+description: An idea, a feature request, or general feedback about the mod.
+title: "[Suggestion] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Got an idea or thoughts about the mod? Share them here. Want to discuss it first? Come chat on [Discord](DISCORD_INVITE_LINK).
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What kind of feedback is this?
+      options:
+        - New feature
+        - Improve something that exists
+        - Support for another mod or block
+        - Support for another Minecraft version or loader
+        - General feedback
+    validations:
+      required: true
+
+  - type: textarea
+    id: idea
+    attributes:
+      label: Your idea or feedback
+      description: What would you like to see, or what do you think about the mod?
+      placeholder: "It would be cool if footprints in snow slowly filled back in when it snows..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: why
+    attributes:
+      label: Why would it be useful?
+      description: How would you or other players use it?
+    validations:
+      required: false
+
+  - type: input
+    id: modpack
+    attributes:
+      label: Are you a modpack author?
+      description: If this is for a modpack, name it here. It helps me prioritize.
+      placeholder: "My Pack - https://modrinth.com/modpack/..."
+    validations:
+      required: false
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else
+      description: Mockups, screenshots, examples from other mods, etc.
+    validations:
+      required: false
