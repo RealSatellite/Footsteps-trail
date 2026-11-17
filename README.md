@@ -7,7 +7,7 @@ The mod's source code is not hosted here. This repo only collects bug reports an
 [![Modrinth](https://img.shields.io/badge/Modrinth-Footsteps%20Trail-00AF5C?logo=modrinth&logoColor=white)](https://modrinth.com/mod/footsteps-trail)
 [![CurseForge](https://img.shields.io/badge/CurseForge-Footsteps%20Trail-F16436?logo=curseforge&logoColor=white)](https://www.curseforge.com/minecraft/mc-mods/footsteps-trail)
 [![Discord](https://img.shields.io/badge/Discord-Join-5865F2?logo=discord&logoColor=white)](https://discord.gg/Wvst4znsgk)
-[![YouTube](https://img.shields.io/badge/YouTube-Showcase-FF0000?logo=youtube&logoColor=white)](YOUTUBE_VIDEO_LINK)
+[![YouTube](https://img.shields.io/badge/YouTube-Showcase-FF0000?logo=youtube&logoColor=white)](https://youtu.be/owqkAouaIs4)
 
 ---
 
@@ -23,7 +23,7 @@ Before you post:
 
 ## 💡 Suggestions and feedback
 
-Ideas, feature requests and general feedback are welcome. [Open a feedback issue](../../issues/new/choose), or talk about it on [Discord](DISCORD_INVITE_LINK).
+Ideas, feature requests and general feedback are welcome. [Open a feedback issue](../../issues/new/choose), or talk about it on [Discord](https://discord.gg/Wvst4znsgk).
 
 ## 💬 Questions and help
 
@@ -52,4 +52,4 @@ If something conflicts with another mod in your pack, [open a bug report](../../
 
 ---
 
-Made by **Blue print** · [Modrinth](https://modrinth.com/mod/footsteps-trail) · [CurseForge](https://www.curseforge.com/minecraft/mc-mods/footsteps-trail) · [Discord](https://discord.gg/Wvst4znsgk) · [YouTube](YOUTUBE_CHANNEL_LINK)
+Made by **Blue print** · [Modrinth](https://modrinth.com/mod/footsteps-trail) · [CurseForge](https://www.curseforge.com/minecraft/mc-mods/footsteps-trail) · [Discord](https://discord.gg/Wvst4znsgk) · [YouTube](https://www.youtube.com/@Official-Satellite)
