@@ -1,0 +1,34 @@
+package dev.footstepstrail.compat;
+
+import org.junit.Test;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.tree.ClassNode;
+import java.io.InputStream;
+import static org.junit.Assert.*;
+
+/** Every quad accessor SodiumQuadAccess reads exists, under the old or the renamed name, with its signature. */
+public class SodiumQuadAccessTest {
+    private static final String[][] ACCESSORS = {
+            {"getX", "(I)F"}, {"getY", "(I)F"}, {"getZ", "(I)F"},
+            {"getTexU", "(I)F"}, {"getTexV", "(I)F"},
+            {"getLight", "(I)I"}, {"getLightFace", "()Lnet/minecraft/core/Direction;"},
+    };
+
+    @Test public void accessorsExistUnderEitherName() throws Exception {
+        ClassNode view = read("net/caffeinemc/mods/sodium/client/model/quad/ModelQuadView");
+        for (String[] accessor : ACCESSORS) {
+            boolean found = view.methods.stream().anyMatch(m -> m.desc.equals(accessor[1])
+                    && (m.name.equals(accessor[0]) || m.name.equals("sodium$" + accessor[0])));
+            assertTrue(accessor[0] + accessor[1], found);
+        }
+    }
+
+    private ClassNode read(String name) throws Exception {
+        ClassNode result = new ClassNode();
+        try (InputStream input = getClass().getClassLoader().getResourceAsStream(name + ".class")) {
+            assertNotNull(name, input);
+            new ClassReader(input).accept(result, 0);
+        }
+        return result;
+    }
+}

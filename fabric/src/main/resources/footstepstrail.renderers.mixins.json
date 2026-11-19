@@ -1,0 +1,9 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "dev.footstepstrail.compat.mixin",
+  "plugin": "dev.footstepstrail.compat.RendererMixinPlugin",
+  "compatibilityLevel": "JAVA_17",
+  "client": ["SodiumBlockRendererMixin", "IndiumBlockInfoAccessor", "IndiumTerrainMixin"],
+  "injectors": { "defaultRequire": 1 }
+}

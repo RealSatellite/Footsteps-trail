@@ -1,13 +1,27 @@
-# 👣 Footsteps Trail: Issues & Feedback
+# 👣 Footsteps Trail
 
-This repository is the **issue tracker** for [Footsteps Trail](https://modrinth.com/mod/footsteps-trail), a lightweight, client-side Minecraft mod that leaves fading footprints behind you as you explore.
+The **source code and issue tracker** for [Footsteps Trail](https://modrinth.com/mod/footsteps-trail), a lightweight, client-side Minecraft mod that leaves fading footprints behind you as you explore.
 
-The mod's source code is not hosted here. This repo only collects bug reports and feedback.
+The source here is published with each release and is licensed under the [MIT License](LICENSE).
 
 [![Modrinth](https://img.shields.io/badge/Modrinth-Footsteps%20Trail-00AF5C?logo=modrinth&logoColor=white)](https://modrinth.com/mod/footsteps-trail)
 [![CurseForge](https://img.shields.io/badge/CurseForge-Footsteps%20Trail-F16436?logo=curseforge&logoColor=white)](https://www.curseforge.com/minecraft/mc-mods/footsteps-trail)
 [![Discord](https://img.shields.io/badge/Discord-Join-5865F2?logo=discord&logoColor=white)](https://discord.gg/Wvst4znsgk)
 [![YouTube](https://img.shields.io/badge/YouTube-Showcase-FF0000?logo=youtube&logoColor=white)](https://youtu.be/owqkAouaIs4)
+
+### ✅ Official pages
+
+Footsteps Trail is made by **Blue Print**. These are the only official pages:
+
+| Where | Account |
+| --- | --- |
+| [CurseForge](https://www.curseforge.com/minecraft/mc-mods/footsteps-trail) | Blue_Print |
+| [Modrinth](https://modrinth.com/mod/footsteps-trail) | [Mod_MC](https://modrinth.com/user/Mod_MC) |
+| [GitHub](https://github.com/RealSatellite/Footsteps-trail) | RealSatellite |
+| [YouTube](https://www.youtube.com/@Official-Satellite) | @Official-Satellite |
+| [Discord](https://discord.gg/Wvst4znsgk) | Mod MC |
+
+Any other upload of Footsteps Trail is not official.
 
 ---
 
@@ -49,6 +63,19 @@ If something conflicts with another mod in your pack, [open a bug report](../../
 | Fabric | 1.20.1 · 1.21.1 · 26.3 |
 | Forge | 1.12.2 · 1.20.1 |
 | NeoForge | 1.21.1 · 26.3 |
+
+---
+
+## 📜 Source code
+
+This repo has the full source of the mod's latest release (currently **1.5.3**). Each release is published here as a single commit, and development happens privately in between.
+
+- **License:** [MIT](LICENSE). You can use, modify and redistribute it, as long as you keep the copyright and license notice.
+- **Pull requests:** not accepted, since the code here is a release snapshot. Please report bugs or ideas through [issues](../../issues/new/choose) instead.
+
+**Layout:** `common` holds the shared code. `fabric`, `forge`, `forge_1_12_2`, `fabric_1_21_1`, `neoforge_1_21_1`, `fabric_latest` and `neoforge_latest` are the loader/version builds.
+
+**Building:** this is a multi-project Gradle build, so run `gradlew build` from the root. The modules target different Java versions (from Java 8 for Forge 1.12.2 up to Java 25 for 26.3) through Gradle toolchains, so you need those JDKs installed.
 
 ---
 

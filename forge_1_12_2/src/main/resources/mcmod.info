@@ -1,0 +1,16 @@
+[
+  {
+    "modid": "footstepstrail",
+    "name": "Footsteps Trail",
+    "description": "Leave fading footprints behind you as you explore. Prints sink into sand, snow and mud, or use surface and classic markers. Client-side and fully configurable.",
+    "version": "${modVersion}",
+    "mcversion": "1.12.2",
+    "url": "https://github.com/RealSatellite/Footsteps-trail",
+    "authorList": ["Blue Print"],
+    "credits": "Blue Print",
+    "logoFile": "assets/footstepstrail/icon.png",
+    "screenshots": [],
+    "dependencies": [],
+    "clientSideOnly": true
+  }
+]

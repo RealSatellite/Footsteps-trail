@@ -1,0 +1,51 @@
+# .gitignore for Footsteps Trail (Minecraft Fabric mod)
+# Ignore build output, IDE settings, and runtime/game data
+
+# Build / Gradle
+.gradle/
+build/
+out/
+tmp/
+generated/
+buildSrc/
+bin/
+
+# Loom cache
+.loom-cache/
+
+# Dev libs
+devlibs/
+
+# Minecraft/Fabric runtime (saves, logs, options, mods during testing)
+run/
+
+# IDEs
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.classpath
+.project
+.settings/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs and temp files
+*.log
+*.tmp
+*.cache
+*.swp
+*.launch
+*~
+
+# Local configuration
+local.properties
+
+# Misc
+*.jar
+*.zip
+
+# End of file

@@ -1,0 +1,8 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "dev.footstepstrail.fabric.mixin.command",
+  "compatibilityLevel": "JAVA_17",
+  "client": ["CommandsPacketMixin"],
+  "injectors": { "defaultRequire": 0 }
+}

@@ -1,0 +1,28 @@
+plugins {
+    id 'architectury-plugin'
+    id 'dev.architectury.loom'
+}
+
+architectury {
+    common(rootProject.enabled_platforms.split(','))
+}
+
+loom {
+    // No access widener currently
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+    mappings "net.fabricmc:yarn:${rootProject.yarn_mappings}:v2"
+
+    // Used only for dev/runtime convenience in common (kept minimal; common code avoids loader APIs).
+    modCompileOnly "net.fabricmc:fabric-loader:${rootProject.loader_version}"
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}

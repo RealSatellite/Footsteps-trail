@@ -1,0 +1,103 @@
+plugins {
+    id 'java'
+    id 'net.neoforged.moddev' version '2.0.148'
+}
+
+group = rootProject.group
+version = rootProject.version
+
+base {
+    archivesName = rootProject.archives_base_name + '-neoforge-1.21.1'
+}
+
+// Merge common sources into this project's compilation so that all
+// classes (common + neoforge-specific) end up in a single classes
+// directory. This avoids the JPMS split-package problem.
+sourceSets {
+    main {
+        java {
+            srcDir project(':common').sourceSets.main.java
+        }
+        resources {
+            srcDir project(':common').sourceSets.main.resources
+        }
+    }
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+    withSourcesJar()
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+neoForge {
+    version = '21.1.266'
+
+    runs {
+        client {
+            client()
+        }
+        server {
+            server()
+        }
+    }
+
+    mods {
+        footstepstrail {
+            sourceSet sourceSets.main
+        }
+    }
+}
+
+repositories {
+    exclusiveContent {
+        forRepository { maven { url = 'https://api.modrinth.com/maven' } }
+        filter { includeGroup 'maven.modrinth' }
+    }
+    exclusiveContent {
+        forRepository { maven { url = 'https://maven.caffeinemc.net/releases' } }
+        filter { includeGroup 'net.caffeinemc' }
+    }
+    exclusiveContent {
+        forRepository { maven { url = 'https://maven.su5ed.dev/releases' } }
+        filter { includeGroup 'org.sinytra.forgified-fabric-api' }
+    }
+}
+
+dependencies {
+    // Optional: terrain footprints inside Sodium's or Embeddium's chunk builder. Not bundled, not required.
+    compileOnly "net.caffeinemc:sodium-neoforge-mod:${sodium_version}"
+    compileOnly "maven.modrinth:embeddium:${embeddium_version}"
+    // Sodium's quad class implements these Fabric Renderer API interfaces (bundled inside Sodium).
+    compileOnly 'org.sinytra.forgified-fabric-api:fabric-renderer-api-v1:3.4.1+9125b6dc19'
+    testRuntimeOnly "net.caffeinemc:sodium-neoforge-mod:${sodium_version}"
+    testRuntimeOnly "maven.modrinth:embeddium:${embeddium_version}"
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.ow2.asm:asm-tree:9.8'
+}
+
+// Shared engine tests (common) plus this module's native adapter tests.
+sourceSets.test.compileClasspath += sourceSets.main.compileClasspath
+sourceSets.test.runtimeClasspath += sourceSets.main.runtimeClasspath
+tasks.withType(Test).configureEach { useJUnit() }
+
+processResources {
+    var modVersion = project.version.toString()
+    var mcVersion = '1.21.1'
+    inputs.property 'version', modVersion
+    inputs.property 'minecraft_version', mcVersion
+
+    filesMatching('META-INF/neoforge.mods.toml') {
+        expand(
+                'version': modVersion,
+                'minecraft_version': mcVersion
+        )
+    }
+}

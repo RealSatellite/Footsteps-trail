@@ -1,0 +1,101 @@
+plugins {
+    id 'dev.architectury.loom'
+    id 'com.gradleup.shadow'
+}
+
+loom {
+    forge {
+        mixinConfig 'footstepstrail.deformation.mixins.json'
+        mixinConfig 'footstepstrail.renderers.mixins.json'
+        mixinConfig 'footstepstrail.commands.mixins.json'
+    }
+
+    // Ensure dev runs include the shared common code
+    mods {
+        footstepstrail {
+            sourceSet project(":common").sourceSets.main
+            sourceSet sourceSets.main
+        }
+    }
+}
+
+base {
+    archivesName = rootProject.archives_base_name + '-forge'
+}
+
+sourceSets.main.java.srcDir rootProject.file('compat_1_20_1/src/main/java')
+sourceSets.main.resources.srcDir rootProject.file('compat_1_20_1/src/main/resources')
+sourceSets.test.java.srcDir rootProject.file('compat_1_20_1/src/test/java')
+
+repositories {
+    exclusiveContent {
+        forRepository { maven { url = 'https://api.modrinth.com/maven' } }
+        filter { includeGroup 'maven.modrinth' }
+    }
+    exclusiveContent {
+        forRepository { maven { url = 'https://maven.su5ed.dev/releases' } }
+        filter { includeGroup 'dev.su5ed.sinytra.fabric-api' }
+    }
+}
+
+configurations {
+    common
+    shadowCommon
+
+    // Make common available on compile/runtime classpaths (remapped for this platform).
+    compileClasspath.extendsFrom common
+}
+
+dependencies {
+    testImplementation 'org.ow2.asm:asm-tree:9.8'
+    minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+    mappings "net.fabricmc:yarn:${rootProject.yarn_mappings}:v2"
+
+    forge "net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_version}"
+
+    // Optional: terrain footprints inside Embeddium's chunk builder. Not bundled, not required.
+    modCompileOnly "maven.modrinth:embeddium:0.3.31+mc1.20.1"
+    // Optional: Forgified Fabric API's Indigo draws Fabric Renderer API models (Continuity via Sinytra
+    // Connector), also inside Embeddium chunks. Not bundled, not required.
+    modCompileOnly("dev.su5ed.sinytra.fabric-api:fabric-renderer-api-v1:3.2.2+cf68abbe77") { transitive = false }
+    modCompileOnly("dev.su5ed.sinytra.fabric-api:fabric-renderer-indigo:1.5.3+b5b2da4177") { transitive = false }
+    common(project(path: ':common', configuration: 'namedElements')) { transitive = false }
+    runtimeOnly files(project(':common').sourceSets.main.output)
+    testImplementation(project(path: ':common', configuration: 'namedElements')) { transitive = false }
+    shadowCommon(project(path: ':common', configuration: 'namedElements')) { transitive = false }
+}
+
+def resourceVersion = project.version
+def resourceMinecraftVersion = rootProject.minecraft_version
+processResources {
+    inputs.property 'version', project.version
+
+    filesMatching('META-INF/mods.toml') {
+        expand 'version': resourceVersion,
+                'minecraft_version': resourceMinecraftVersion
+    }
+}
+
+shadowJar {
+    configurations = [project.configurations.shadowCommon]
+    archiveClassifier = 'dev-shadow'
+}
+
+remapJar {
+    inputFile.set(shadowJar.archiveFile)
+    dependsOn shadowJar
+    archiveClassifier.set(null)
+}
+
+jar {
+    archiveClassifier = 'dev'
+}
+
+sourcesJar {
+    def commonSources = project(':common').tasks.named('sourcesJar')
+    dependsOn commonSources
+    from(commonSources.get().archiveFile.map { zipTree(it) })
+}
+
+// Hook tests read the optional renderer classes the mixins target.
+sourceSets.test.runtimeClasspath += sourceSets.main.compileClasspath

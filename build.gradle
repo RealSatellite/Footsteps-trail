@@ -1,0 +1,122 @@
+plugins {
+    id 'architectury-plugin' version '3.5.169'
+    id 'dev.architectury.loom' version '1.17.491' apply false
+    id 'dev.architectury.loom-no-remap' version '1.17.491' apply false
+    id 'com.gradleup.shadow' version '8.3.6' apply false
+    // RetroFuturaGradle 2.x is built with classfile major 69 (Java 25), which Gradle 8.x
+    // cannot instrument/read. Use the newest 1.x line instead.
+    id 'com.gtnewhorizons.retrofuturagradle' version '2.0.6' apply false
+}
+
+architectury {
+    minecraft = rootProject.minecraft_version
+}
+
+allprojects {
+    group = project.maven_group
+    version = project.mod_version
+
+    repositories {
+        mavenCentral()
+        maven { url = 'https://maven.fabricmc.net/' }
+        maven { url = 'https://maven.architectury.dev/' }
+        maven { url = 'https://maven.minecraftforge.net/' }
+    }
+
+    // Work around Architectury TransformerRuntime.removeDuplicates crash (5.2.87)
+    // seen on newer Forge/NeoForge classpaths. Force the fixed transformer runtime.
+    configurations.configureEach {
+        resolutionStrategy.eachDependency { details ->
+            if (details.requested.group == 'dev.architectury'
+                    && details.requested.name == 'architectury-transformer'
+                    && details.requested.version == '5.2.87') {
+                details.useVersion '5.2.88'
+                details.because 'Fixes TransformerRuntime.removeDuplicates StringIndexOutOfBoundsException on Forge/NeoForge dev runs'
+            }
+        }
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'maven-publish'
+
+    tasks.matching { it.name == 'prepareArchitecturyTransformer' }.configureEach { task ->
+        if (project.extensions.findByName('architectury')) {
+            // Task already configured by architectury plugin
+        } else {
+            task.doFirst {
+                def jsonDir = project.file('build/architectury')
+                jsonDir.mkdirs()
+                def jsonFile = project.file('build/architectury/architectury.common.json')
+                jsonFile.text = '{"mixinMappings":{}}'
+            }
+        }
+    }
+
+    def javaReleaseProp = project.findProperty('java_release')?.toString()
+    def javaRelease = javaReleaseProp != null ? Integer.parseInt(javaReleaseProp) : 17
+
+    // Only use javac's `--release` flag for 9+. Some legacy toolchains/tasks
+    // (notably Forge 1.12.2 userdev steps) still invoke a Java 8 compiler,
+    // where `--release` is an invalid flag.
+    tasks.withType(JavaCompile).configureEach {
+        if (name == 'compileJava' || name == 'compileTestJava') {
+            options.compilerArgs.addAll(['-Xlint:deprecation', '-Xlint:unchecked', '-Werror'])
+        }
+        if (javaRelease >= 9) {
+            options.release = javaRelease
+        }
+    }
+
+    java {
+        withSourcesJar()
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(javaRelease)
+        }
+    }
+
+    dependencies {
+        testImplementation 'junit:junit:4.13.2'
+    }
+    sourceSets.test.java.srcDir rootProject.file('common/src/test/java')
+    tasks.withType(Test).configureEach {
+        useJUnit()
+    }
+
+    tasks.withType(Jar).configureEach {
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        from(rootProject.file('LICENSE')) {
+            rename { "${it}_${rootProject.name}" }
+        }
+    }
+
+    tasks.matching { it.name == 'transformProductionFabric' || it.name == 'transformProductionForge' }.configureEach {
+        enabled = false
+    }
+
+    plugins.withId('dev.architectury.loom') {
+        loom {
+            mixin {
+                useLegacyMixinAp = false
+            }
+        }
+    }
+    plugins.withId('net.fabricmc.fabric-loom') {
+        loom {
+            mixin {
+                useLegacyMixinAp = false
+            }
+        }
+    }
+}
+
+// Root build task that triggers build across all subprojects
+tasks.register('build') {
+    group = 'build'
+    description = 'Builds all modules including subprojects'
+    dependsOn subprojects.collect { ":${it.name}:build" }
+}
+
+
+

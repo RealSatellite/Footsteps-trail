@@ -1,0 +1,36 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="MIT"
+issueTrackerURL="https://github.com/RealSatellite/Footsteps-trail/issues"
+
+[[mixins]]
+config="footstepstrail.deformation.mixins.json"
+
+[[mixins]]
+config="footstepstrail.renderers.mixins.json"
+
+[[mixins]]
+config="footstepstrail.commands.mixins.json"
+
+[[mods]]
+modId="footstepstrail"
+version="${version}"
+displayName="Footsteps Trail"
+authors="Blue Print"
+displayURL="https://github.com/RealSatellite/Footsteps-trail"
+logoFile="assets/footstepstrail/icon.png"
+description='''Leave fading footprints behind you as you explore. Prints sink into sand, snow and mud, or use surface and classic markers. Client-side and fully configurable.'''
+
+[[dependencies.footstepstrail]]
+modId="neoforge"
+type="required"
+versionRange="[21.1,)"
+ordering="NONE"
+side="CLIENT"
+
+[[dependencies.footstepstrail]]
+modId="minecraft"
+type="required"
+versionRange="[${minecraft_version}]"
+ordering="NONE"
+side="CLIENT"

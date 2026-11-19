@@ -1,0 +1,84 @@
+plugins {
+    id 'dev.architectury.loom'
+    id 'com.gradleup.shadow'
+}
+
+loom {
+    // Ensure dev runs include the shared common code
+    mods {
+        footstepstrail {
+            sourceSet project(":common").sourceSets.main
+            sourceSet sourceSets.main
+        }
+    }
+}
+
+base {
+    archivesName = rootProject.archives_base_name + '-fabric-1.21.1'
+}
+
+repositories {
+    maven { url = 'https://maven.terraformersmc.com/releases/' }
+    exclusiveContent {
+        forRepository { maven { url = 'https://api.modrinth.com/maven' } }
+        filter { includeGroup 'maven.modrinth' }
+    }
+}
+
+configurations {
+    common
+    shadowCommon
+
+    // Make common available on compile/runtime classpaths (without packaging it twice).
+    compileClasspath.extendsFrom common
+}
+
+dependencies {
+    testImplementation 'org.ow2.asm:asm-tree:9.8'
+    minecraft "com.mojang:minecraft:${project.mc_version}"
+    mappings "net.fabricmc:yarn:${project.yarn_version}:v2"
+
+    modImplementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+    // Optional: settings button in Mod Menu. Not bundled, not required.
+    modCompileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
+    // Optional: terrain footprints inside Sodium's chunk builder. Not bundled, not required.
+    modCompileOnly "maven.modrinth:sodium:${project.sodium_version}"
+
+    common(project(path: ':common', configuration: 'namedElements')) { transitive = false }
+    runtimeOnly files(project(':common').sourceSets.main.output)
+    testImplementation(project(path: ':common', configuration: 'namedElements')) { transitive = false }
+    shadowCommon(project(path: ':common', configuration: 'namedElements')) { transitive = false }
+}
+
+def resourceVersion = project.version
+processResources {
+    inputs.property 'version', project.version
+    filesMatching('fabric.mod.json') {
+        expand 'version': resourceVersion
+    }
+}
+
+shadowJar {
+    configurations = [project.configurations.shadowCommon]
+    archiveClassifier = 'dev-shadow'
+}
+
+remapJar {
+    inputFile.set(shadowJar.archiveFile)
+    dependsOn shadowJar
+    archiveClassifier.set(null)
+}
+
+jar {
+    archiveClassifier = 'dev'
+}
+
+sourcesJar {
+    def commonSources = project(':common').tasks.named('sourcesJar')
+    dependsOn commonSources
+    from(commonSources.get().archiveFile.map { zipTree(it) })
+}
+
+// Hook tests read the optional renderer classes the mixins target.
+sourceSets.test.runtimeClasspath += sourceSets.main.compileClasspath

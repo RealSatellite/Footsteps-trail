@@ -1,0 +1,103 @@
+plugins {
+    id 'net.fabricmc.fabric-loom' version '1.17.0-alpha.6'
+    id 'maven-publish'
+}
+
+def fabricLatestMinecraftVersion = project.findProperty('minecraft_version') ?: '26.3'
+def fabricLatestLoaderVersion = project.findProperty('loader_version') ?: '0.19.5'
+def fabricLatestFabricApiVersion = project.findProperty('fabric_api_version') ?: '0.161.0+26.3'
+
+version = project.mod_version
+group = project.maven_group
+
+base {
+    archivesName = project.archives_base_name
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir project(':common').sourceSets.main.java
+            srcDir rootProject.file('modern/src/main/java')
+        }
+        resources {
+            srcDir project(':common').sourceSets.main.resources
+            srcDir rootProject.file('modern/src/main/resources')
+        }
+    }
+}
+
+repositories {
+    maven { url = 'https://maven.terraformersmc.com/releases/' }
+    exclusiveContent {
+        forRepository { maven { url = 'https://api.modrinth.com/maven' } }
+        filter { includeGroup 'maven.modrinth' }
+    }
+}
+
+loom {
+    mods {
+        footstepstrail {
+            sourceSet sourceSets.main
+        }
+    }
+    runs {
+        client {
+            vmArg "-Xmx3G"
+        }
+    }
+}
+
+
+
+dependencies {
+    testImplementation 'junit:junit:4.13.2'
+    minecraft "com.mojang:minecraft:${fabricLatestMinecraftVersion}"
+
+    implementation "net.fabricmc:fabric-loader:${fabricLatestLoaderVersion}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${fabricLatestFabricApiVersion}"
+    // Optional: settings button in Mod Menu. Not bundled, not required.
+    compileOnly "com.terraformersmc:modmenu:21.0.0"
+    // Optional: terrain footprints inside Sodium's chunk builder. Not bundled, not required.
+    compileOnly "maven.modrinth:sodium:${project.sodium_version}"
+    // Hook tests read the classes the Sodium mixin targets.
+    testImplementation "maven.modrinth:sodium:${project.sodium_version}"
+    testImplementation 'org.ow2.asm:asm-tree:9.8'
+
+}
+
+sourceSets.test.java.srcDir rootProject.file('modern/src/test/java')
+tasks.withType(Test).configureEach { useJUnit() }
+
+def projVersion = project.version
+def projName = project.name
+
+tasks.withType(AbstractCopyTask).configureEach {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+processResources {
+    inputs.property 'version', projVersion
+    filesMatching('fabric.mod.json') {
+        expand 'version': projVersion
+    }
+}
+
+jar {
+    inputs.property 'projectName', projName
+    from(rootProject.file('LICENSE')) {
+        rename { "${it}_${projName}" }
+    }
+}
+
+publishing {
+    publications {
+        create('mavenJava', MavenPublication) {
+            from components.java
+        }
+    }
+
+    repositories {
+    }
+}
+
