@@ -50,7 +50,7 @@ Not sure whether it's a bug, or need help with a setting? Ask on **[Discord](htt
 **You're free to include Footsteps Trail in any modpack.** You don't need to ask, and credit is appreciated.
 
 - **Client-side only.** It's safe on any server, and servers don't need it installed.
-- **Works with Sodium, Embeddium and Iris.**
+- **Works with popular rendering mods:** Sodium, Embeddium, Iris and Oculus (tested with shaders), Indium, Continuity/CTM connected textures, and Sinytra Connector (Forgified Fabric API). With renderers that replace chunk building, like OptiFine or VulkanMod, it automatically uses Surface footprints instead.
 - **Configurable defaults.** Ship your own `config/footstepstrail.json` with the pack.
 - **Modded blocks.** Map any block ID to a material (sand, snow, mud, stone, …) with `deformationMaterials`, so it takes footprints correctly.
 
